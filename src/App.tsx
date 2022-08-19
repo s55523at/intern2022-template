@@ -1,86 +1,27 @@
-import { useState } from "react";
-import {
-  Center,
-  HStack,
-  Box,
-  Button,
-  Heading,
-  Image,
-  Link,
-  Text,
-} from "@chakra-ui/react";
-import type { ImageProps } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import reactLogo from "./assets/react.svg";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Repeat } from "typescript-tuple";
+import Cale from "~/my-app/Cale/index";
+import Board from "~/my-app/Board/Board";
+import Square from "~/my-app/Square/Square";
+import Main from "~/my-app/main";
+//import SquareState from "~/my-app/Square/Square";
+import "~/my-app/index.css";
 
-function App() {
-  const [count, setCount] = useState(0);
+type SquareState = number | null;
 
-  const MotionImage = motion<Omit<ImageProps, "transition">>(Image);
-  return (
-    <Center
-      sx={{
-        width: "100vw",
-        height: "100vh",
-        margin: "0 auto",
-        padding: "2rem",
-        textAlign: "center",
-      }}
-    >
-      <Box>
-        <HStack justify="center">
-          <Link
-            as="a"
-            href="https://vitejs.dev"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Image
-              src="/vite.svg"
-              p={6}
-              sx={{ willChange: "filter", height: "6em" }}
-              _hover={{ filter: "drop-shadow(0 0 2em #646cffaa)" }}
-              alt="Vite logo"
-              m={0}
-            />
-          </Link>
-          <Link
-            as="a"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <MotionImage
-              as={motion.img}
-              animate={{ transform: ["rotate(0deg)", "rotate(360deg)"] }}
-              transition={{
-                repeat: Infinity,
-                duration: 20,
-                ease: "linear",
-              }}
-              src={reactLogo}
-              p={6}
-              sx={{ willChange: "filter", height: "6em" }}
-              _hover={{ filter: "drop-shadow(0 0 2em #646cffaa)" }}
-              alt="React logo"
-            />
-          </Link>
-        </HStack>
-        <Heading as="h1">Vite + React</Heading>
-        <Box p={8}>
-          <Button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </Button>
-          <Text>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </Text>
-        </Box>
-        <Text sx={{ color: "#888" }}>
-          Click on the Vite and React logos to learn more
-        </Text>
-      </Box>
-    </Center>
-  );
-}
+const func = () => {
+  return <></>;
+};
+const func2 = () => {
+  return <></>;
+};
 
-export default App;
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <ChakraProvider>
+      <Main />
+    </ChakraProvider>
+  </React.StrictMode>
+);
