@@ -22,15 +22,13 @@ const Board = (props: BoardProps) => {
   const now = new Date();
   const nowD = now.getDate();
   const nowM = now.getMonth() + 1;
+  const tKey: (number | null)[] = [];
 
   const checkNow = () => {
     if (props.date.month === nowM) {
       if (d === nowD) {
-        /*const a = document.getElementById("day");
-        a.setAttribute("id", "uuu");
-        console.log(a.id);
-        a.id = "today";
-        console.log(a.id);*/
+        tKey.pop();
+        tKey.push(1);
         console.log(d);
       }
     }
@@ -46,6 +44,7 @@ const Board = (props: BoardProps) => {
   let cnt = 0;
   for (; cnt !== fYobi; cnt++) {
     dayNum.push(null);
+    tKey.push(0);
   }
   let d = 1;
   if (
@@ -57,6 +56,7 @@ const Board = (props: BoardProps) => {
     //30
     for (; d !== 31; cnt++) {
       dayNum.push(d);
+      tKey.push(0);
       checkNow();
       d++;
     }
@@ -72,6 +72,7 @@ const Board = (props: BoardProps) => {
     //31
     for (; d !== 32; cnt++) {
       dayNum.push(d);
+      tKey.push(0);
       checkNow();
       d++;
     }
@@ -81,12 +82,14 @@ const Board = (props: BoardProps) => {
       //うる
       for (; d !== 30; cnt++) {
         dayNum.push(d);
+        tKey.push(0);
         checkNow();
         d++;
       }
     } else {
       for (; d !== 29; cnt++) {
         dayNum.push(d);
+        tKey.push(0);
         checkNow();
         d++;
       }
@@ -94,16 +97,86 @@ const Board = (props: BoardProps) => {
   }
   for (; d <= 42; cnt++) {
     dayNum.push(null);
+    tKey.push(0);
     d++;
   }
 
   const renderSquare = (i: number) => (
-    <Square value={dayNum[i]} onClick={() => props.onClick(i)} />
+    <Square
+      value={dayNum[i]}
+      onClick={() => props.onClick(i)}
+      today={tKey[i]}
+    />
   );
   const ySquare = (i: number) => <Yobi value={yobi[i]} />;
 
   return (
-    <div>
+    <table className="tab">
+      <tr>
+        <th>{ySquare(0)}</th>
+        <th>{ySquare(1)}</th>
+        <th>{ySquare(2)}</th>
+        <th>{ySquare(3)}</th>
+        <th>{ySquare(4)}</th>
+        <th>{ySquare(5)}</th>
+        <th>{ySquare(6)}</th>
+      </tr>
+      <tr>
+        <th>{renderSquare(0)}</th>
+        <th>{renderSquare(1)}</th>
+        <th>{renderSquare(2)}</th>
+        <th>{renderSquare(3)}</th>
+        <th>{renderSquare(4)}</th>
+        <th>{renderSquare(5)}</th>
+        <th>{renderSquare(6)}</th>
+      </tr>
+      <tr>
+        <th>{renderSquare(7)}</th>
+        <th>{renderSquare(8)}</th>
+        <th>{renderSquare(9)}</th>
+        <th>{renderSquare(10)}</th>
+        <th>{renderSquare(11)}</th>
+        <th>{renderSquare(12)}</th>
+        <th>{renderSquare(13)}</th>
+      </tr>
+      <tr>
+        <th>{renderSquare(14)}</th>
+        <th>{renderSquare(15)}</th>
+        <th>{renderSquare(16)}</th>
+        <th>{renderSquare(17)}</th>
+        <th>{renderSquare(18)}</th>
+        <th>{renderSquare(19)}</th>
+        <th>{renderSquare(20)}</th>
+      </tr>
+      <tr>
+        <th>{renderSquare(21)}</th>
+        <th>{renderSquare(22)}</th>
+        <th>{renderSquare(23)}</th>
+        <th>{renderSquare(24)}</th>
+        <th>{renderSquare(25)}</th>
+        <th>{renderSquare(26)}</th>
+        <th>{renderSquare(27)}</th>
+      </tr>
+      <tr>
+        <th>{renderSquare(28)}</th>
+        <th>{renderSquare(29)}</th>
+        <th>{renderSquare(30)}</th>
+        <th>{renderSquare(31)}</th>
+        <th>{renderSquare(32)}</th>
+        <th>{renderSquare(33)}</th>
+        <th>{renderSquare(34)}</th>
+      </tr>
+      <tr>
+        <th>{renderSquare(35)}</th>
+        <th>{renderSquare(36)}</th>
+        <th>{renderSquare(37)}</th>
+        <th>{renderSquare(38)}</th>
+        <th>{renderSquare(39)}</th>
+        <th>{renderSquare(40)}</th>
+        <th>{renderSquare(41)}</th>
+      </tr>
+    </table>
+    /*<div>
       <div className="board-high">
         {ySquare(0)}
         {ySquare(1)}
@@ -167,7 +240,7 @@ const Board = (props: BoardProps) => {
         {renderSquare(40)}
         {renderSquare(41)}
       </div>
-    </div>
+    </div>*/
   );
 };
 

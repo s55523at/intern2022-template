@@ -16,14 +16,6 @@ import Board from "~/my-app/Board/Board";
   preClick?:(id:string)=>void;
 }*/
 
-type SquareState = number | null;
-type BoardState = Repeat<SquareState, 42>;
-
-type CaleState = {
-  readonly year: number;
-  readonly month: number;
-};
-
 type CaleProps = {
   pClick: () => void;
   y: number;
@@ -35,12 +27,16 @@ const Cale = (props: CaleProps) => {
   return (
     <div className="calendar">
       <div className="info">
-        <button onClick={props.pClick}>←</button>
+        <button className="button" onClick={props.pClick}>
+          &lt;&nbsp;
+        </button>
         <span>{props.y}</span>
         <span>年 </span>
         <span>{props.m}</span>
         <span>月</span>
-        <button onClick={props.nClick}>→</button>
+        <button className="button" onClick={props.nClick}>
+          &nbsp;&gt;
+        </button>
         <ol></ol>
       </div>
     </div>

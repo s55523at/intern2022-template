@@ -3,6 +3,11 @@ body {
   margin: 20px;
 }
 
+table {
+  border-collapse: seprate;
+  border-spacing: 0px;
+}
+
 ol,
 ul {
   padding-left: 30px;
@@ -21,41 +26,42 @@ ul {
 .y {
   background: #fff;
   border: 1px solid #999;
-  float: left;
   font-size: 12px;
-  line-height: 34px;
+  line-height: 28px;
   height: 25px;
-  margin-right: -1px;
-  margin-top: -1px;
+  margin-right: -3px;
+  margin-top: -3px;
   padding: 0;
   text-align: center;
   width: 130px;
+  vertical-align: top;
 }
 .square {
   background: #fff;
   border: 1px solid #999;
-  float: left;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 34px;
   height: 80px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: left;
-  vertical-align: top;
   width: 130px;
+  margin-right: -3px;
+  margin-top: -3px;
+  position: relative;
+  text-align: left;
+  display: flex;
+  vertical-align: top;
 }
-.day {
-  background: rgb(255, 0, 0);
+.today {
+  color: green;
+  background: #fff;
   border: 1px solid #999;
-  float: left;
-  font-size: 20px;
+  border-top: 3px solid rgb(3, 180, 3);
+  font-size: 15px;
   line-height: 34px;
   height: 80px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
+  margin-right: -3px;
+  margin-top: -3px;
   text-align: left;
+  display: flex;
   vertical-align: top;
   width: 130px;
 }
@@ -69,10 +75,54 @@ ul {
 }
 
 .calendar {
+  margin-top: 10px;
+  margin-left: 20px;
   display: flex;
   flex-direction: row;
 }
+.cale {
+  margin-left: 740px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
 
-.info {
-  margin-left: 20px;
+.button {
+  font-weight: 700;
+}
+
+.newPop {
+  display: none;
+  position: fixed;
+  top: 20%;
+  left: 28%;
+  width: 100%;
+  height: 100%;
+  width: 320px;
+  height: 320px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+
+#overlay {
+  /*　画面全体を覆う設定　*/
+  /* position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;*/
+
+  /*　画面の中央に要素を表示させる設定　*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#content {
+  display: none;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  background: #fff;
+  border: 1px solid #999;
 }

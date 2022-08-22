@@ -9,15 +9,6 @@ import Main from "~/my-app/main";
 //import SquareState from "~/my-app/Square/Square";
 import "~/my-app/index.css";
 
-type SquareState = number | null;
-
-const func = () => {
-  return <></>;
-};
-const func2 = () => {
-  return <></>;
-};
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider>

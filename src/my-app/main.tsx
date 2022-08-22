@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import Cale from "~/my-app/Cale/index";
 import Board from "~/my-app/Board/Board";
+import NewPopOver from "~/my-app/PopOver/NewPop";
 import "~/my-app/index.css";
 
 const Main = () => {
@@ -10,8 +11,16 @@ const Main = () => {
     month: now.getMonth() + 1,
   });
 
-  const handleClick = (i: number) => {
-    return;
+  /*let pFlag = 0;
+
+  const handleClick = () => {
+    console.log(pFlag);
+    pFlag = 1;
+    const a = document.getElementById("content")!;
+    a.style.display = "flex";
+  };*/
+  const handleClick = () => {
+    console.log("click");
   };
 
   const preClick = () => {
@@ -32,15 +41,17 @@ const Main = () => {
     console.log("+");
     console.log(date.month);
   };
-  /*<Cale
-        pClick={preClick()}
-        y={date.year}
-        m={date.month}
-        nClick={nextClick()}
-      />*/
   return (
     <div className="calendar">
       <div className="game-board">
+        <div className="cale">
+          <Cale
+            pClick={preClick}
+            y={date.year}
+            m={date.month}
+            nClick={nextClick}
+          />
+        </div>
         <Board
           date={date}
           squares={[
@@ -90,9 +101,9 @@ const Main = () => {
           onClick={handleClick}
         />
       </div>
-      <Cale pClick={preClick} y={date.year} m={date.month} nClick={nextClick} />
     </div>
   );
 };
+//<NewPopOver popFlag={pFlag} />
 
 export default Main;
