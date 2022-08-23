@@ -13,7 +13,7 @@ type BoardProps = {
     month: number;
   };
   squares: BoardState;
-  onClick: (i: number) => void;
+  //onClick: (i: number) => void;
 };
 
 const Board = (props: BoardProps) => {
@@ -23,23 +23,24 @@ const Board = (props: BoardProps) => {
   const nowD = now.getDate();
   const nowM = now.getMonth() + 1;
   const tKey: (number | null)[] = [];
+  const sche: (string | null)[] = [];
 
   const checkNow = () => {
     if (props.date.month === nowM) {
       if (d === nowD) {
         tKey.pop();
         tKey.push(1);
-        console.log(d);
+        //console.log(d);
       }
     }
   };
 
   const day1 = new Date(props.date.year, props.date.month - 1, 1);
-  console.log(day1);
+  //console.log(day1);
   //month = 2;
   //year = 2024;
   const fYobi = day1.getDay();
-  console.log(yobi[fYobi]); //一日目の曜日
+  //console.log(yobi[fYobi]); //一日目の曜日
 
   let cnt = 0;
   for (; cnt !== fYobi; cnt++) {
@@ -77,7 +78,7 @@ const Board = (props: BoardProps) => {
       d++;
     }
   } else if (props.date.month === 2) {
-    console.log("2gatu!!!!");
+    //console.log("2gatu!!!!");
     if (props.date.year % 4 === 0) {
       //うる
       for (; d !== 30; cnt++) {
@@ -103,9 +104,11 @@ const Board = (props: BoardProps) => {
 
   const renderSquare = (i: number) => (
     <Square
-      value={dayNum[i]}
-      onClick={() => props.onClick(i)}
-      today={tKey[i]}
+      date={props.date} //月
+      value={dayNum[i]} //日
+      //onClick={() => props.onClick(i)}
+      today={tKey[i]} //今日か否か
+      //schedule={sche[i]} //
     />
   );
   const ySquare = (i: number) => <Yobi value={yobi[i]} />;

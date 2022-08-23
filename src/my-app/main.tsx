@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import Cale from "~/my-app/Cale/index";
 import Board from "~/my-app/Board/Board";
-import NewPopOver from "~/my-app/PopOver/NewPop";
 import "~/my-app/index.css";
 
 const Main = () => {
@@ -98,7 +97,7 @@ const Main = () => {
             null,
             null,
           ]}
-          onClick={handleClick}
+          //onClick={handleClick}
         />
       </div>
     </div>
