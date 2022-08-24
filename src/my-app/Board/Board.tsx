@@ -16,14 +16,23 @@ type BoardProps = {
   //onClick: (i: number) => void;
 };
 
+type scheduleData = {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  memo: string;
+};
+
 const Board = (props: BoardProps) => {
   const yobi = ["日", "月", "火", "水", "木", "金", "土"];
   const dayNum: (number | null)[] = []; //空の日付配列
+  const [data, setData] = useState<(scheduleData | null)[]>([]);
+  //const [data,setData]=useState<(string|null)[]>([]);
   const now = new Date();
   const nowD = now.getDate();
   const nowM = now.getMonth() + 1;
   const tKey: (number | null)[] = [];
-  const sche: (string | null)[] = [];
 
   const checkNow = () => {
     if (props.date.month === nowM) {
@@ -101,17 +110,26 @@ const Board = (props: BoardProps) => {
     tKey.push(0);
     d++;
   }
+  //setDayTitle={function (dayTitle: string | null): string | null {} }
 
   const renderSquare = (i: number) => (
     <Square
       date={props.date} //月
       value={dayNum[i]} //日
-      //onClick={() => props.onClick(i)}
       today={tKey[i]} //今日か否か
-      //schedule={sche[i]} //
+      squareNum={i}
+      data={data[i]} //予定
+      setData={setData}
     />
   );
   const ySquare = (i: number) => <Yobi value={yobi[i]} />;
+
+  /*const [count, setCount] = useState(0);
+  setCount((prevCount) => {
+    return prevCount + 1;
+  });
+
+  type SetCount = (prev: (i: number) => number) => void;*/
 
   return (
     <table className="tab">
@@ -179,71 +197,6 @@ const Board = (props: BoardProps) => {
         <th>{renderSquare(41)}</th>
       </tr>
     </table>
-    /*<div>
-      <div className="board-high">
-        {ySquare(0)}
-        {ySquare(1)}
-        {ySquare(2)}
-        {ySquare(3)}
-        {ySquare(4)}
-        {ySquare(5)}
-        {ySquare(6)}
-      </div>
-      <div id="day" className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-        {renderSquare(6)}
-      </div>
-      <div id="day" className="board-row">
-        {renderSquare(7)}
-        {renderSquare(8)}
-        {renderSquare(9)}
-        {renderSquare(10)}
-        {renderSquare(11)}
-        {renderSquare(12)}
-        {renderSquare(13)}
-      </div>
-      <div id="day" className="board-row">
-        {renderSquare(14)}
-        {renderSquare(15)}
-        {renderSquare(16)}
-        {renderSquare(17)}
-        {renderSquare(18)}
-        {renderSquare(19)}
-        {renderSquare(20)}
-      </div>
-      <div id="day" className="board-row">
-        {renderSquare(21)}
-        {renderSquare(22)}
-        {renderSquare(23)}
-        {renderSquare(24)}
-        {renderSquare(25)}
-        {renderSquare(26)}
-        {renderSquare(27)}
-      </div>
-      <div id="day" className="board-row">
-        {renderSquare(28)}
-        {renderSquare(29)}
-        {renderSquare(30)}
-        {renderSquare(31)}
-        {renderSquare(32)}
-        {renderSquare(33)}
-        {renderSquare(34)}
-      </div>
-      <div id="day" className="board-row">
-        {renderSquare(35)}
-        {renderSquare(36)}
-        {renderSquare(37)}
-        {renderSquare(38)}
-        {renderSquare(39)}
-        {renderSquare(40)}
-        {renderSquare(41)}
-      </div>
-    </div>*/
   );
 };
 
