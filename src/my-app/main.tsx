@@ -28,8 +28,8 @@ const Main = () => {
       setDate({ ...date, month: (date.month = 12) });
       setDate({ ...date, year: (date.year -= 1) });
     }
-    console.log("-");
-    console.log(date.month);
+    //console.log("-");
+    //console.log(date.month);
   };
   const nextClick = () => {
     setDate({ ...date, month: (date.month += 1) });
@@ -37,8 +37,8 @@ const Main = () => {
       setDate({ ...date, month: (date.month = 1) });
       setDate({ ...date, year: (date.year += 1) });
     }
-    console.log("+");
-    console.log(date.month);
+    //console.log("+");
+    //console.log(date.month);
   };
   return (
     <div className="calendar">

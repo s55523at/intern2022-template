@@ -1,5 +1,5 @@
 import { HStack, propNames, Stack } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -7,7 +7,9 @@ import {
   Button,
   Box,
   Textarea,
+  IconButton,
 } from "@chakra-ui/react";
+import { CheckIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Popover,
   PopoverTrigger,
@@ -38,11 +40,11 @@ export type SquareProps = {
   value: SquareState;
   today: number | null;
   data: scheduleData | null;
-  //data: string | null;
-  //setDayTitle: string | null;
-  setData: (
-    prev: (i: (scheduleData | null)[]) => (scheduleData | null)[]
-  ) => void;
+  // setData: (
+  //   prev: (i: (scheduleData | null)[]) => (scheduleData | null)[]
+  // ) => void;
+  setData: (newData: scheduleData) => void;
+  //setData: React.Dispatch<React.SetStateAction<(scheduleData | null)[]>>;
   squareNum: number;
 };
 
@@ -52,21 +54,38 @@ const Square = (props: SquareProps) => {
   const [startTime, setStart] = useState("");
   const [endTime, setEnd] = useState("");
   const [memo, setMemo] = useState("");
+  const nullData: scheduleData = {
+    title: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    memo: "",
+  };
 
-  //props.setData({...props.data,props.title:(props.data.title="aa")})
-  //console.log((props.data.title))
-
-  //const next = [...prev];
-  //console.log(props.data?.title);
-
-  /*
-  setTitle((title) => {
-      title + "";
-      return title;
-    });
-    */
   const deleteSchedule = () => {
-    //props.setData(null);
+    console.log("delete");
+    props.setData({
+      title: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      memo: "",
+    });
+  };
+
+  const save = () => {
+    props.setData({
+      title: title,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      memo: memo,
+    });
+    setTitle("");
+    setDate("");
+    setStart("");
+    setEnd("");
+    setMemo("");
   };
 
   if (props.value === null) {
@@ -79,72 +98,184 @@ const Square = (props: SquareProps) => {
             <div>{props.value}</div>
             <Box>
               <Schedule
-                title={props.data?.title}
-                date={props.data?.date}
-                startTime={props.data?.startTime}
-                endTime={props.data?.endTime}
-                memo={props.data?.memo}
+                data={props.data}
+                // title={title}
+                // date={date}
+                // startTime={startTime}
+                // endTime={endTime}
+                // memo={memo}
                 del={deleteSchedule}
-                value={props.squareNum}
+                value={props.value}
+                year={props.date.year}
+                month={props.date.month}
               />
             </Box>
           </button>
         </PopoverTrigger>
-        <PopoverContent w="500px" className="scheText">
+        <PopoverContent w="500px">
           <PopoverArrow />
           <PopoverCloseButton />
-          <PopoverHeader textAlign="left">&nbsp;&nbsp;予定を作成</PopoverHeader>
+          <PopoverHeader textAlign="left">
+            &nbsp;&nbsp;予定を作成
+            <IconButton
+              icon={<CheckIcon />}
+              onClick={save}
+              aria-label={"save"}
+              variant="unstyled"
+              fontSize="15px"
+            />
+          </PopoverHeader>
           <PopoverBody>
             <Stack spacing="3">
               <Input
                 placeholder="タイトルを入力"
-                value={props.data?.title}
-                //onChange={(e) => props.setData:(prev:(i:scheduleData|null))=>}
-                onChange={(e) => {
+                //value={props.data?.title}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                /*onChange={(e) => {
                   props.setData((prev) => {
+                    if (prev[props.squareNum] === undefined) {
+                      console.log("データなし");
+                      //tempData.splice(props.squareNum, 0, nullData); //配列に追加
+                      for (let i = 0; i < 42; i++) {
+                        prev.push(nullData);
+                      }
+                    }
+                    const tempData = prev;
                     //prevを更新する処理
-                    return prev.map((schedule: string | undefined, index) => {
+                    console.log(props.squareNum);
+                    console.log(tempData);
+                    return tempData.map((schedule, index) => {
                       //scheduleをいじる
-                      if (index === props.squareNum) {
-                        //更新
-                        schedule = props.data?.title;
+                      if (index === props.value) {
+                        //prev[squareNum]を更新
+                        console.log(props.value);
+                        if (schedule?.title !== undefined) {
+                          schedule.title = e.target.value;
+                          console.log(e.target.value);
+                        }
+                        return schedule;
+                      } else {
                         return schedule;
                       }
-                      return schedule;
                     });
                   });
-                }}
-                //onChange={(e) => setTitle(e.target.value)}
+                }}*/
               />
               <Input
                 placeholder="日を入力"
                 type="date"
                 w="300px"
-                value={props.data?.date}
+                value={date}
                 onChange={(e) => setDate(e.target.value)}
+                //value={props.data?.date}
+                //defaultValue={}
+                /*onChange={(e) => {
+                  props.setData((prev) => {
+                    const tempData = prev;
+                    //prevを更新する処理
+                    return tempData.map((schedule, index) => {
+                      //scheduleをいじる
+                      if (index === props.value) {
+                        //prev[squareNum]を更新
+                        console.log(props.value);
+                        if (schedule?.date !== undefined) {
+                          schedule.date = e.target.value;
+                          console.log(e.target.value);
+                        }
+                        return schedule;
+                      } else {
+                        return schedule;
+                      }
+                    });
+                  });
+                }}*/
               />
               <HStack>
                 <Input
                   placeholder="時を入力"
                   type="time"
                   w="200px"
-                  value={props.data?.startTime}
+                  value={startTime}
                   onChange={(e) => setStart(e.target.value)}
+                  //value={props.data?.startTime}
+                  /*onChange={(e) => {
+                    props.setData((prev) => {
+                      const tempData = prev;
+                      //prevを更新する処理
+                      return tempData.map((schedule, index) => {
+                        //scheduleをいじる
+                        if (index === props.value) {
+                          //prev[squareNum]を更新
+                          console.log(props.value);
+                          if (schedule?.startTime !== undefined) {
+                            schedule.startTime = e.target.value;
+                            console.log(e.target.value);
+                          }
+                          return schedule;
+                        } else {
+                          return schedule;
+                        }
+                      });
+                    });
+                  }}*/
                 />
                 <a>~</a>
                 <Input
                   placeholder="時を入力"
                   type="time"
                   w="200px"
-                  value={props.data?.endTime}
-                  onChange={(e) => setEnd(e.target.value)}
+                  value={startTime}
+                  onChange={(e) => setStart(e.target.value)}
+                  //value={props.data?.endTime}
+                  /*onChange={(e) => {
+                    props.setData((prev) => {
+                      const tempData = prev;
+                      //prevを更新する処理
+                      return tempData.map((schedule, index) => {
+                        //scheduleをいじる
+                        if (index === props.value) {
+                          //prev[squareNum]を更新
+                          console.log(props.value);
+                          if (schedule?.endTime !== undefined) {
+                            schedule.endTime = e.target.value;
+                            console.log(e.target.value);
+                          }
+                          return schedule;
+                        } else {
+                          return schedule;
+                        }
+                      });
+                    });
+                  }}*/
                 />
               </HStack>
               <Textarea
                 placeholder="memo"
                 h="100px"
-                value={props.data?.memo}
+                value={memo}
                 onChange={(e) => setMemo(e.target.value)}
+                //value={props.data?.memo}
+                /*onChange={(e) => {
+                  props.setData((prev) => {
+                    const tempData = prev;
+                    //prevを更新する処理
+                    return tempData.map((schedule, index) => {
+                      //scheduleをいじる
+                      if (index === props.value) {
+                        //prev[squareNum]を更新
+                        console.log(props.value);
+                        if (schedule?.memo !== undefined) {
+                          schedule.memo = e.target.value;
+                          console.log(e.target.value);
+                        }
+                        return schedule;
+                      } else {
+                        return schedule;
+                      }
+                    });
+                  });
+                }}*/
               />
             </Stack>
           </PopoverBody>
