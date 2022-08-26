@@ -2,6 +2,7 @@ import { Repeat } from "typescript-tuple";
 import Square from "~/my-app/Square/Square";
 import Yobi from "~/my-app/Yobi/Yobi";
 import { useState, FC } from "react";
+import { PresenceContext } from "framer-motion";
 
 type SquareState = number | null;
 
@@ -18,10 +19,22 @@ type BoardProps = {
 
 type scheduleData = {
   title: string;
-  date: string;
+  year: number;
+  month: number;
+  day: number;
   startTime: string;
   endTime: string;
   memo: string;
+};
+
+const nullData: scheduleData = {
+  title: "",
+  year: 0,
+  month: 0,
+  day: 0,
+  startTime: "",
+  endTime: "",
+  memo: "",
 };
 
 const Board = (props: BoardProps) => {
@@ -33,6 +46,20 @@ const Board = (props: BoardProps) => {
   const nowD = now.getDate();
   const nowM = now.getMonth() + 1;
   const tKey: (number | null)[] = [];
+  // const regexp = /(\d{4})-(\d{2})-(\d{2})/;
+  // const dateVal: number[] = [];
+  // if (data[squareNum] !== undefined) {
+  //   const dateStr = props.data[props.squareNum]?.date?.match(regexp);
+  //   if (dateStr !== null) {
+  //     if (dateStr !== undefined) {
+  //       for (let i = 0; i < dateStr?.length; i++) {
+  //         dateVal[i] = parseInt(dateStr[i]);
+  //         console.log(dateVal[i]);
+  //       }
+  //     }
+  //   }
+  // }
+  let zure = -1;
 
   const checkNow = () => {
     if (props.date.month === nowM) {
@@ -55,6 +82,7 @@ const Board = (props: BoardProps) => {
   for (; cnt !== fYobi; cnt++) {
     dayNum.push(null);
     tKey.push(0);
+    zure++;
   }
   let d = 1;
   if (
@@ -110,7 +138,6 @@ const Board = (props: BoardProps) => {
     tKey.push(0);
     d++;
   }
-  //setDayTitle={function (dayTitle: string | null): string | null {} }
 
   const addData = (newData: scheduleData) => {
     setData((prev) => {
@@ -124,8 +151,10 @@ const Board = (props: BoardProps) => {
       value={dayNum[i]} //日
       today={tKey[i]} //今日か否か
       squareNum={i}
-      data={data[i]} //予定
+      data={data} //予定
       setData={addData}
+      zure={zure}
+      //del={del}
       // setData={setData}
     />
   );
@@ -137,6 +166,34 @@ const Board = (props: BoardProps) => {
   });
 
   type SetCount = (prev: (i: number) => number) => void;*/
+  const elm = [];
+  for (let i = 0; i < 42; i += 7) {
+    const items = [];
+    for (let j = 0; j < 7; j++) {
+      items.push(
+        <td
+          key={
+            props.date.year.toString() +
+            props.date.month.toString() +
+            (i + j).toString()
+          }
+        >
+          {renderSquare(j + i)}
+        </td>
+      );
+    }
+    elm.push(
+      <tr
+        key={
+          props.date.year.toString() +
+          props.date.month.toString() +
+          i.toString()
+        }
+      >
+        {items}
+      </tr>
+    );
+  }
 
   return (
     <table className="tab">
@@ -150,7 +207,7 @@ const Board = (props: BoardProps) => {
           <th>{ySquare(5)}</th>
           <th>{ySquare(6)}</th>
         </tr>
-        <tr>
+        {/* <tr>
           <th>{renderSquare(0)}</th>
           <th>{renderSquare(1)}</th>
           <th>{renderSquare(2)}</th>
@@ -203,7 +260,11 @@ const Board = (props: BoardProps) => {
           <th>{renderSquare(39)}</th>
           <th>{renderSquare(40)}</th>
           <th>{renderSquare(41)}</th>
-        </tr>
+        </tr> */}
+        {elm.map((value, index) => {
+          console.log(value);
+          return value;
+        })}
       </tbody>
     </table>
   );

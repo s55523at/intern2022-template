@@ -20,13 +20,16 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverAnchor,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Schedule from "~/my-app/Schedule/Schedule";
 
 type SquareState = number | null;
 type scheduleData = {
   title: string;
-  date: string;
+  year: number;
+  month: number;
+  day: number;
   startTime: string;
   endTime: string;
   memo: string;
@@ -39,13 +42,10 @@ export type SquareProps = {
   };
   value: SquareState;
   today: number | null;
-  data: scheduleData | null;
-  // setData: (
-  //   prev: (i: (scheduleData | null)[]) => (scheduleData | null)[]
-  // ) => void;
+  data: (scheduleData | null)[];
   setData: (newData: scheduleData) => void;
-  //setData: React.Dispatch<React.SetStateAction<(scheduleData | null)[]>>;
   squareNum: number;
+  zure: number;
 };
 
 const Square = (props: SquareProps) => {
@@ -54,29 +54,39 @@ const Square = (props: SquareProps) => {
   const [startTime, setStart] = useState("");
   const [endTime, setEnd] = useState("");
   const [memo, setMemo] = useState("");
-  const nullData: scheduleData = {
-    title: "",
-    date: "",
-    startTime: "",
-    endTime: "",
-    memo: "",
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const dataBase: (newData | null)[] = [];
+  //const [dataBase, setDataBase] = useState<newData[]>([]);
+  const regexp = /(\d{4})-(\d{2})-(\d{2})/;
+  const dateVal: number[] = [];
+  let delKey = false;
 
-  const deleteSchedule = () => {
-    console.log("delete");
-    props.setData({
-      title: "",
-      date: "",
-      startTime: "",
-      endTime: "",
-      memo: "",
-    });
-  };
+  // const deleteSchedule = () => {
+  //   console.log("delete");
+  //   props.setData({
+  //     title: "",
+  //     date: "",
+  //     startTime: "",
+  //     endTime: "",
+  //     memo: "",
+  //   });
+  // };
 
   const save = () => {
+    const dateStr = date.match(regexp);
+    if (dateStr !== null) {
+      if (dateStr !== undefined) {
+        for (let i = 0; i < dateStr?.length; i++) {
+          dateVal[i] = parseInt(dateStr[i]);
+          console.log(dateVal[i]);
+        }
+      }
+    }
     props.setData({
       title: title,
-      date: date,
+      year: dateVal[1],
+      month: dateVal[2],
+      day: dateVal[3],
       startTime: startTime,
       endTime: endTime,
       memo: memo,
@@ -86,35 +96,50 @@ const Square = (props: SquareProps) => {
     setStart("");
     setEnd("");
     setMemo("");
+    onClose;
   };
+  const del = () => {
+    delKey = true;
+  };
+  const sendData: scheduleData | null = props.data[props.squareNum];
+
+  // const found = props.data.find(
+  //   (element) =>
+  //     props.date.year === element?.year &&
+  //     props.date.month === element.month &&
+  //     props.squareNum === element.day + props.zure
+  // );
+  //console.log(found);
+  const found = props.data.filter(
+    (element) =>
+      props.date.year === element?.year &&
+      props.date.month === element.month &&
+      props.squareNum === element.day + props.zure
+  );
 
   if (props.value === null) {
     return <a className="square">{props.value}</a>;
   } else {
     return (
-      <Popover placement="right">
+      <Popover placement="right" isOpen={isOpen} onClose={onClose}>
         <PopoverTrigger>
-          <button className={props.today ? "today" : "square"}>
+          <button className={props.today ? "today" : "square"} onClick={onOpen}>
             <div>{props.value}</div>
             <Box>
               <Schedule
-                data={props.data}
-                // title={title}
-                // date={date}
-                // startTime={startTime}
-                // endTime={endTime}
-                // memo={memo}
-                del={deleteSchedule}
+                data={found}
+                del={del}
                 value={props.value}
                 year={props.date.year}
                 month={props.date.month}
+                delKey={delKey}
               />
             </Box>
           </button>
         </PopoverTrigger>
         <PopoverContent w="500px">
           <PopoverArrow />
-          <PopoverCloseButton />
+          <PopoverCloseButton onClick={onClose} />
           <PopoverHeader textAlign="left">
             &nbsp;&nbsp;予定を作成
             <IconButton
@@ -170,26 +195,6 @@ const Square = (props: SquareProps) => {
                 onChange={(e) => setDate(e.target.value)}
                 //value={props.data?.date}
                 //defaultValue={}
-                /*onChange={(e) => {
-                  props.setData((prev) => {
-                    const tempData = prev;
-                    //prevを更新する処理
-                    return tempData.map((schedule, index) => {
-                      //scheduleをいじる
-                      if (index === props.value) {
-                        //prev[squareNum]を更新
-                        console.log(props.value);
-                        if (schedule?.date !== undefined) {
-                          schedule.date = e.target.value;
-                          console.log(e.target.value);
-                        }
-                        return schedule;
-                      } else {
-                        return schedule;
-                      }
-                    });
-                  });
-                }}*/
               />
               <HStack>
                 <Input
@@ -199,55 +204,15 @@ const Square = (props: SquareProps) => {
                   value={startTime}
                   onChange={(e) => setStart(e.target.value)}
                   //value={props.data?.startTime}
-                  /*onChange={(e) => {
-                    props.setData((prev) => {
-                      const tempData = prev;
-                      //prevを更新する処理
-                      return tempData.map((schedule, index) => {
-                        //scheduleをいじる
-                        if (index === props.value) {
-                          //prev[squareNum]を更新
-                          console.log(props.value);
-                          if (schedule?.startTime !== undefined) {
-                            schedule.startTime = e.target.value;
-                            console.log(e.target.value);
-                          }
-                          return schedule;
-                        } else {
-                          return schedule;
-                        }
-                      });
-                    });
-                  }}*/
                 />
                 <a>~</a>
                 <Input
                   placeholder="時を入力"
                   type="time"
                   w="200px"
-                  value={startTime}
-                  onChange={(e) => setStart(e.target.value)}
+                  value={endTime}
+                  onChange={(e) => setEnd(e.target.value)}
                   //value={props.data?.endTime}
-                  /*onChange={(e) => {
-                    props.setData((prev) => {
-                      const tempData = prev;
-                      //prevを更新する処理
-                      return tempData.map((schedule, index) => {
-                        //scheduleをいじる
-                        if (index === props.value) {
-                          //prev[squareNum]を更新
-                          console.log(props.value);
-                          if (schedule?.endTime !== undefined) {
-                            schedule.endTime = e.target.value;
-                            console.log(e.target.value);
-                          }
-                          return schedule;
-                        } else {
-                          return schedule;
-                        }
-                      });
-                    });
-                  }}*/
                 />
               </HStack>
               <Textarea
@@ -256,26 +221,6 @@ const Square = (props: SquareProps) => {
                 value={memo}
                 onChange={(e) => setMemo(e.target.value)}
                 //value={props.data?.memo}
-                /*onChange={(e) => {
-                  props.setData((prev) => {
-                    const tempData = prev;
-                    //prevを更新する処理
-                    return tempData.map((schedule, index) => {
-                      //scheduleをいじる
-                      if (index === props.value) {
-                        //prev[squareNum]を更新
-                        console.log(props.value);
-                        if (schedule?.memo !== undefined) {
-                          schedule.memo = e.target.value;
-                          console.log(e.target.value);
-                        }
-                        return schedule;
-                      } else {
-                        return schedule;
-                      }
-                    });
-                  });
-                }}*/
               />
             </Stack>
           </PopoverBody>
