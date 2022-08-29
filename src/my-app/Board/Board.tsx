@@ -8,6 +8,12 @@ type SquareState = number | null;
 
 type BoardState = Repeat<SquareState, 42>;
 
+type date = {
+  year: number;
+  month: number;
+  day: number;
+};
+
 type BoardProps = {
   date: {
     year: number; //setDate({...date,year:1})
@@ -18,13 +24,13 @@ type BoardProps = {
 };
 
 type scheduleData = {
-  title: string;
+  title: string | undefined;
   year: number;
   month: number;
   day: number;
-  startTime: string;
-  endTime: string;
-  memo: string;
+  startTime: string | undefined;
+  endTime: string | undefined;
+  memo: string | undefined;
 };
 
 const nullData: scheduleData = {
@@ -144,6 +150,23 @@ const Board = (props: BoardProps) => {
       return [...prev, newData];
     });
   };
+  const deleteData = (delDate: date) => {
+    console.log(delDate);
+    console.log(data);
+    setData(
+      data.filter(
+        (data, index) =>
+          delDate.year !== data?.year ||
+          delDate.month !== data?.month ||
+          delDate.day !== data?.day
+      )
+    );
+    console.log(data);
+  };
+
+  // const editData=(editData:scheduleData)=>{
+  //   setData(data.map((data,index)=>()))
+  // }
 
   const renderSquare = (i: number) => (
     <Square
@@ -153,6 +176,8 @@ const Board = (props: BoardProps) => {
       squareNum={i}
       data={data} //予定
       setData={addData}
+      delData={deleteData}
+      editData={addData}
       zure={zure}
       //del={del}
       // setData={setData}
@@ -262,7 +287,7 @@ const Board = (props: BoardProps) => {
           <th>{renderSquare(41)}</th>
         </tr> */}
         {elm.map((value, index) => {
-          console.log(value);
+          //console.log(value);
           return value;
         })}
       </tbody>

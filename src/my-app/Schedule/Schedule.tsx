@@ -1,10 +1,11 @@
-import { HStack, propNames, Stack, TagLabel } from "@chakra-ui/react";
+import { HStack, propNames, Stack, TagLabel, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import {
   FormControl,
   FormLabel,
   Input,
   Button,
+  Text,
   Box,
   IconButton,
   useDisclosure,
@@ -16,6 +17,7 @@ import {
   InfoIcon,
   DeleteIcon,
   EditIcon,
+  CloseIcon,
 } from "@chakra-ui/icons";
 
 import {
@@ -32,13 +34,13 @@ import {
 import Edit from "../edit/Edit";
 
 type scheduleData = {
-  title: string;
+  title: string | undefined;
   year: number;
   month: number;
   day: number;
-  startTime: string;
-  endTime: string;
-  memo: string;
+  startTime: string | undefined;
+  endTime: string | undefined;
+  memo: string | undefined;
 };
 
 type ScheProps = {
@@ -48,11 +50,16 @@ type ScheProps = {
   // endTime: string | undefined;
   // memo: string | undefined;
   data: (scheduleData | null | undefined)[];
+  // del: (
+  //   y: number | undefined,
+  //   m: number | undefined,
+  //   d: number | undefined
+  // ) => void;
   del: () => void;
   value: number;
   year: number;
   month: number;
-  delKey: boolean;
+  editData: (newData: scheduleData) => void;
 };
 const Schedule = (props: ScheProps) => {
   //const [flag,setFlag]=useState(false);
@@ -81,191 +88,166 @@ const Schedule = (props: ScheProps) => {
     event.stopPropagation();
   };
 
+  const allData = props.data.map(function (data, index) {
+    return [
+      <div className="title" onClick={onOpen} key={index}>
+        <Text key={index}>{data?.title}</Text>
+      </div>,
+    ];
+  });
   //if (props.delKey === false) {
   if (props.data.length === 0) {
     return null;
-  }
-
-  if (props.data.length === 1) {
-    return (
-      <div onClick={stopProp}>
-        <Popover placement="right" isOpen={isOpen} onClose={onClose}>
-          <PopoverTrigger>
-            <button className="title" onClick={onOpen}>
-              {props.data[0]?.title}
-            </button>
-          </PopoverTrigger>
-          <PopoverContent w="500px">
-            <PopoverArrow />
-            <PopoverCloseButton onClick={onClose} />
-            <PopoverHeader textAlign="left" color="black">
-              &nbsp;&nbsp;予定の詳細
-              <IconButton
-                icon={<DeleteIcon />}
-                //onClick={(props.del, onClose)}
-                onClick={props.del}
-                aria-label={"delete"}
-                variant="unstyled"
-                fontSize="15px"
-              />
-              <Edit
-                data={props.data[0]}
-                value={props.value}
-                year={props.year}
-                month={props.month}
-              />
-            </PopoverHeader>
-            <PopoverBody className="scheText">
-              <Stack spacing="1">
-                <HStack>
-                  <BellIcon />
-                  <Box>{props.data[0]?.title}</Box>
-                </HStack>
-                <HStack>
-                  <CalendarIcon />
-                  <Box>{props.data[0]?.year}</Box>
-                  <div>-</div>
-                  <Box>{props.data[0]?.month}</Box>
-                  <div>-</div>
-                  <Box>{props.data[0]?.day}</Box>
-                </HStack>
-                <HStack>
-                  <TimeIcon />
-                  <Box>{props.data[0]?.startTime}</Box>
-                  <div>~</div>
-                  <Box>{props.data[0]?.endTime}</Box>
-                </HStack>
-                <HStack>
-                  <InfoIcon />
-                  <Box>{props.data[0]?.memo}</Box>
-                </HStack>
-              </Stack>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-      </div>
-    );
-  }
-  if (props.data.length == 2) {
-    console.log("2ko");
-    return (
-      <div onClick={stopProp}>
-        <Popover placement="right" isOpen={isOpen} onClose={onClose}>
-          <PopoverTrigger>
-            <button className="title" onClick={onOpen}>
-              {props.data[1]?.title}
-            </button>
-          </PopoverTrigger>
-          <PopoverContent w="500px">
-            <PopoverArrow />
-            <PopoverCloseButton onClick={onClose} />
-            <PopoverHeader textAlign="left" color="black">
-              &nbsp;&nbsp;予定の詳細
-              <IconButton
-                icon={<DeleteIcon />}
-                //onClick={(props.del, onClose)}
-                onClick={props.del}
-                aria-label={"delete"}
-                variant="unstyled"
-                fontSize="15px"
-              />
-              <Edit
-                data={props.data[0]}
-                value={props.value}
-                year={props.year}
-                month={props.month}
-              />
-            </PopoverHeader>
-            <PopoverBody className="scheText">
-              <Stack spacing="1">
-                <HStack>
-                  <BellIcon />
-                  <Box>{props.data[0]?.title}</Box>
-                </HStack>
-                <HStack>
-                  <CalendarIcon />
-                  <Box>{props.data[0]?.year}</Box>
-                  <div>-</div>
-                  <Box>{props.data[0]?.month}</Box>
-                  <div>-</div>
-                  <Box>{props.data[0]?.day}</Box>
-                </HStack>
-                <HStack>
-                  <TimeIcon />
-                  <Box>{props.data[0]?.startTime}</Box>
-                  <div>~</div>
-                  <Box>{props.data[0]?.endTime}</Box>
-                </HStack>
-                <HStack>
-                  <InfoIcon />
-                  <Box>{props.data[0]?.memo}</Box>
-                </HStack>
-              </Stack>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-        <Popover placement="right" isOpen={isOpen} onClose={onClose}>
-          <PopoverTrigger>
-            <button className="title2" onClick={onOpen}>
-              {props.data[1]?.title}
-            </button>
-          </PopoverTrigger>
-          <PopoverContent w="500px">
-            <PopoverArrow />
-            <PopoverCloseButton onClick={onClose} />
-            <PopoverHeader textAlign="left" color="black">
-              &nbsp;&nbsp;予定の詳細
-              <IconButton
-                icon={<DeleteIcon />}
-                //onClick={(props.del, onClose)}
-                onClick={props.del}
-                aria-label={"delete"}
-                variant="unstyled"
-                fontSize="15px"
-              />
-              <Edit
-                data={props.data[1]}
-                value={props.value}
-                year={props.year}
-                month={props.month}
-              />
-            </PopoverHeader>
-            <PopoverBody className="scheText">
-              <Stack spacing="1">
-                <HStack>
-                  <BellIcon />
-                  <Box>{props.data[1]?.title}</Box>
-                </HStack>
-                <HStack>
-                  <CalendarIcon />
-                  <Box>{props.data[1]?.year}</Box>
-                  <div>-</div>
-                  <Box>{props.data[1]?.month}</Box>
-                  <div>-</div>
-                  <Box>{props.data[1]?.day}</Box>
-                </HStack>
-                <HStack>
-                  <TimeIcon />
-                  <Box>{props.data[1]?.startTime}</Box>
-                  <div>~</div>
-                  <Box>{props.data[1]?.endTime}</Box>
-                </HStack>
-                <HStack>
-                  <InfoIcon />
-                  <Box>{props.data[1]?.memo}</Box>
-                </HStack>
-              </Stack>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-      </div>
-    );
   } else {
-    return null;
+    return (
+      <div onClick={stopProp}>
+        <Popover placement="right" isOpen={isOpen} onClose={onClose}>
+          <PopoverTrigger>
+            <div className="scheduleContainer">{[allData]}</div>
+          </PopoverTrigger>
+          <PopoverContent w="500px">
+            <PopoverArrow />
+            <PopoverHeader textAlign="left" color="black">
+              <HStack>
+                <Box>
+                  &nbsp;&nbsp;予定の詳細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                </Box>
+                <IconButton
+                  icon={<DeleteIcon />}
+                  onClick={props.del}
+                  aria-label={"delete"}
+                  variant="unstyled"
+                  fontSize="15px"
+                />
+                <Edit
+                  data={props.data[0]}
+                  value={props.value}
+                  year={props.year}
+                  month={props.month}
+                  editData={props.editData}
+                  del={props.del}
+                />
+                <IconButton
+                  icon={<CloseIcon />}
+                  onClick={onClose}
+                  aria-label={"close"}
+                  variant="unstyled"
+                  fontSize="15px"
+                />
+              </HStack>
+            </PopoverHeader>
+            <PopoverBody className="scheText">
+              <Stack spacing="1">
+                <HStack>
+                  <BellIcon />
+                  <Box>{props.data[0]?.title}</Box>
+                </HStack>
+                <HStack>
+                  <CalendarIcon />
+                  <Box>{props.data[0]?.year}</Box>
+                  <div>年</div>
+                  <Box>{props.data[0]?.month}</Box>
+                  <div>月</div>
+                  <Box>{props.data[0]?.day}</Box>
+                  <div>日</div>
+                </HStack>
+                <HStack>
+                  <TimeIcon />
+                  <Box>{props.data[0]?.startTime}</Box>
+                  <div>～</div>
+                  <Box>{props.data[0]?.endTime}</Box>
+                </HStack>
+                <HStack>
+                  <InfoIcon />
+                  <Box>{props.data[0]?.memo}</Box>
+                </HStack>
+              </Stack>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
   }
-  // } else {
-  //   //props.delKey = false;
-  //   return null;
-  // }
 };
+/*if (props.data.length === 0 || props.data === undefined) {
+    console.log(props.data);
+    return null;
+  } else {
+    props.data.map(function (data, index) {
+      return [
+        <div onClick={stopProp} key={index}>
+          <Popover placement="right" isOpen={isOpen} onClose={onClose}>
+            <PopoverTrigger>
+              <div className="scheduleContainer">
+                <div className="title" onClick={onOpen}>
+                  <Text>{data?.title}</Text>
+                </div>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent w="500px">
+              <PopoverArrow />
+              <PopoverHeader textAlign="left" color="black">
+                <HStack>
+                  <Box>
+                    &nbsp;&nbsp;予定の詳細&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                  </Box>
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    onClick={props.del}
+                    aria-label={"delete"}
+                    variant="unstyled"
+                    fontSize="15px"
+                  />
+                  <Edit
+                    data={props.data[0]}
+                    value={props.value}
+                    year={props.year}
+                    month={props.month}
+                    editData={props.editData}
+                    del={props.del}
+                  />
+                  <IconButton
+                    icon={<CloseIcon />}
+                    onClick={onClose}
+                    aria-label={"close"}
+                    variant="unstyled"
+                    fontSize="15px"
+                  />
+                </HStack>
+              </PopoverHeader>
+              <PopoverBody className="scheText">
+                <Stack spacing="1">
+                  <HStack>
+                    <BellIcon />
+                    <Box>{props.data[0]?.title}</Box>
+                  </HStack>
+                  <HStack>
+                    <CalendarIcon />
+                    <Box>{props.data[0]?.year}</Box>
+                    <div>年</div>
+                    <Box>{props.data[0]?.month}</Box>
+                    <div>月</div>
+                    <Box>{props.data[0]?.day}</Box>
+                    <div>日</div>
+                  </HStack>
+                  <HStack>
+                    <TimeIcon />
+                    <Box>{props.data[0]?.startTime}</Box>
+                    <div>～</div>
+                    <Box>{props.data[0]?.endTime}</Box>
+                  </HStack>
+                  <HStack>
+                    <InfoIcon />
+                    <Box>{props.data[0]?.memo}</Box>
+                  </HStack>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </div>,
+      ];
+    });
+  }
+};*/
+
 export default Schedule;

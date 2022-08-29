@@ -9,7 +9,7 @@ import {
   Textarea,
   IconButton,
 } from "@chakra-ui/react";
-import { CheckIcon, DeleteIcon } from "@chakra-ui/icons";
+import { CheckIcon, DeleteIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Popover,
   PopoverTrigger,
@@ -26,13 +26,18 @@ import Schedule from "~/my-app/Schedule/Schedule";
 
 type SquareState = number | null;
 type scheduleData = {
-  title: string;
+  title: string | undefined;
   year: number;
   month: number;
   day: number;
-  startTime: string;
-  endTime: string;
-  memo: string;
+  startTime: string | undefined;
+  endTime: string | undefined;
+  memo: string | undefined;
+};
+type date = {
+  year: number;
+  month: number;
+  day: number;
 };
 
 export type SquareProps = {
@@ -44,13 +49,24 @@ export type SquareProps = {
   today: number | null;
   data: (scheduleData | null)[];
   setData: (newData: scheduleData) => void;
+  delData: (delDate: date) => void;
+  editData: (newData: scheduleData) => void;
   squareNum: number;
   zure: number;
 };
 
 const Square = (props: SquareProps) => {
+  const y = props.date.year.toString();
+  const d = props.squareNum - props.zure;
+  const defoDate: string = y.concat(
+    "-",
+    props.date.month.toString().padStart(2, "0"),
+    "-",
+    d.toString().padStart(2, "0")
+  );
+  //console.log(defoDate);
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(defoDate);
   const [startTime, setStart] = useState("");
   const [endTime, setEnd] = useState("");
   const [memo, setMemo] = useState("");
@@ -59,7 +75,7 @@ const Square = (props: SquareProps) => {
   //const [dataBase, setDataBase] = useState<newData[]>([]);
   const regexp = /(\d{4})-(\d{2})-(\d{2})/;
   const dateVal: number[] = [];
-  let delKey = false;
+  //let delKey = false;
 
   // const deleteSchedule = () => {
   //   console.log("delete");
@@ -92,24 +108,32 @@ const Square = (props: SquareProps) => {
       memo: memo,
     });
     setTitle("");
-    setDate("");
+    setDate(defoDate);
     setStart("");
     setEnd("");
     setMemo("");
     onClose;
   };
   const del = () => {
-    delKey = true;
+    props.delData({
+      year: props.date.year,
+      month: props.date.month,
+      day: props.squareNum - props.zure,
+    });
+    console.log("del");
+    /*for (let i = 0; i < props.data.length; i++) {
+      if (
+        props.date.year === props.data[i]?.year &&
+        props.date.month === props.data[i]?.month &&
+        props.value === props.data[i]?.day
+      ) {
+        console.log(props.data);
+        delete props.data[i];
+        console.log(props.data);
+      }
+    }*/
   };
-  const sendData: scheduleData | null = props.data[props.squareNum];
 
-  // const found = props.data.find(
-  //   (element) =>
-  //     props.date.year === element?.year &&
-  //     props.date.month === element.month &&
-  //     props.squareNum === element.day + props.zure
-  // );
-  //console.log(found);
   const found = props.data.filter(
     (element) =>
       props.date.year === element?.year &&
@@ -124,7 +148,7 @@ const Square = (props: SquareProps) => {
       <Popover placement="right" isOpen={isOpen} onClose={onClose}>
         <PopoverTrigger>
           <button className={props.today ? "today" : "square"} onClick={onOpen}>
-            <div>{props.value}</div>
+            <div className="dateContainer">{props.value}</div>
             <Box>
               <Schedule
                 data={found}
@@ -132,23 +156,33 @@ const Square = (props: SquareProps) => {
                 value={props.value}
                 year={props.date.year}
                 month={props.date.month}
-                delKey={delKey}
+                editData={props.editData}
               />
             </Box>
           </button>
         </PopoverTrigger>
         <PopoverContent w="500px">
           <PopoverArrow />
-          <PopoverCloseButton onClick={onClose} />
           <PopoverHeader textAlign="left">
-            &nbsp;&nbsp;予定を作成
-            <IconButton
-              icon={<CheckIcon />}
-              onClick={save}
-              aria-label={"save"}
-              variant="unstyled"
-              fontSize="15px"
-            />
+            <HStack>
+              <Box fontSize="15px">
+                &nbsp;&nbsp;予定を作成&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+              </Box>
+              <IconButton
+                icon={<CheckIcon />}
+                onClick={save}
+                aria-label={"save"}
+                variant="unstyled"
+                fontSize="15px"
+              />
+              <IconButton
+                icon={<CloseIcon />}
+                onClick={onClose}
+                aria-label={"close"}
+                variant="unstyled"
+                fontSize="15px"
+              />
+            </HStack>
           </PopoverHeader>
           <PopoverBody>
             <Stack spacing="3">
@@ -157,35 +191,6 @@ const Square = (props: SquareProps) => {
                 //value={props.data?.title}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                /*onChange={(e) => {
-                  props.setData((prev) => {
-                    if (prev[props.squareNum] === undefined) {
-                      console.log("データなし");
-                      //tempData.splice(props.squareNum, 0, nullData); //配列に追加
-                      for (let i = 0; i < 42; i++) {
-                        prev.push(nullData);
-                      }
-                    }
-                    const tempData = prev;
-                    //prevを更新する処理
-                    console.log(props.squareNum);
-                    console.log(tempData);
-                    return tempData.map((schedule, index) => {
-                      //scheduleをいじる
-                      if (index === props.value) {
-                        //prev[squareNum]を更新
-                        console.log(props.value);
-                        if (schedule?.title !== undefined) {
-                          schedule.title = e.target.value;
-                          console.log(e.target.value);
-                        }
-                        return schedule;
-                      } else {
-                        return schedule;
-                      }
-                    });
-                  });
-                }}*/
               />
               <Input
                 placeholder="日を入力"

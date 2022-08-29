@@ -90,33 +90,6 @@ ul {
   font-weight: 700;
 }
 
-.newPop {
-  display: none;
-  position: fixed;
-  top: 20%;
-  left: 28%;
-  width: 100%;
-  height: 100%;
-  width: 320px;
-  height: 320px;
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-}
-
-#overlay {
-  /*　画面全体を覆う設定　*/
-  /* position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;*/
-
-  /*　画面の中央に要素を表示させる設定　*/
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 #content {
   display: none;
   z-index: 2;
@@ -128,31 +101,21 @@ ul {
 }
 
 .title {
-  display: flex;
+  /* display: flex; */
+
   font-size: 10px;
-  margin-top: 30px;
-  margin-right: 100px;
-  background-color: rgba(3, 180, 3, 0.774);
+  margin-top: -6px;
+  margin-left: 1px;
+  background-color: rgba(7, 136, 7, 0.589);
   color: white;
   border-radius: 3px;
-  width: 110px;
-  transform: translate(-7px);
+  width: 125px;
   line-height: 17px;
-  align-items: center;
+  margin-bottom: 9px;
+  /* align-items: center; */
+  text-align: left;
 }
-.title2 {
-  display: flex;
-  font-size: 10px;
-  margin-top: 42px;
-  margin-right: 100px;
-  background-color: rgba(3, 180, 3, 0.774);
-  color: white;
-  border-radius: 3px;
-  width: 110px;
-  transform: translate(-7px);
-  line-height: 17px;
-  align-items: center;
-}
+
 .scheText {
   font-size: 17px;
   color: rgb(39, 39, 39);
@@ -161,4 +124,15 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.scheduleContainer {
+  position: relative;
+  margin-top: 26px;
+}
+
+.dateContainer {
+  position: absolute;
+  width: 100%;
+  margin-top: -5px;
 }
