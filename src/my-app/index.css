@@ -32,7 +32,7 @@ ul {
   margin-right: -3px;
   margin-top: -3px;
   padding: 0;
-  text-align: center;
+  text-align: left;
   width: 130px;
   vertical-align: top;
 }
@@ -81,7 +81,8 @@ ul {
   flex-direction: row;
 }
 .cale {
-  margin-left: 740px;
+  position: absolute;
+  left: 750px;
   margin-bottom: 10px;
   font-size: 20px;
 }
@@ -135,4 +136,21 @@ ul {
   position: absolute;
   width: 100%;
   margin-top: -5px;
+}
+
+.caleIcon {
+  font-size: 33px;
+  color: rgba(7, 136, 7, 0.589);
+}
+
+.header {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.appTitle {
+  position: relative;
+  top: 2px;
+  font-size: 20px;
 }

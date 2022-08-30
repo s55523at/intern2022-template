@@ -44,6 +44,7 @@ type scheduleData = {
   startTime: string | undefined;
   endTime: string | undefined;
   memo: string | undefined;
+  id: number;
 };
 
 type date = {
@@ -53,13 +54,14 @@ type date = {
 };
 
 type ScheProps = {
-  data: scheduleData | null | undefined;
+  data: scheduleData | null;
   value: number;
   year: number;
   month: number;
   // delData: (delDate: date) => void;
-  del: () => void;
+  del: (id: number) => void;
   editData: (newData: scheduleData) => void;
+  id: number;
 };
 
 const Edit = (props: ScheProps) => {
@@ -91,7 +93,7 @@ const Edit = (props: ScheProps) => {
         }
       }
     }
-    props.del();
+    props.del(props.id);
     props.editData({
       title: title,
       year: dateVal[1],
@@ -100,12 +102,13 @@ const Edit = (props: ScheProps) => {
       startTime: startTime,
       endTime: endTime,
       memo: memo,
+      id: props.id,
     });
     setTitle(title);
     setDate(defoDate);
     setStart(startTime);
-    setEnd(props.data?.endTime);
-    setMemo(props.data?.memo);
+    setEnd(endTime);
+    setMemo(memo);
     onClose;
   };
 
@@ -114,7 +117,6 @@ const Edit = (props: ScheProps) => {
       <Popover placement="left" isOpen={isOpen}>
         <IconButton
           icon={<EditIcon />}
-          //onClick={(props.del, onClose)}
           onClick={onOpen}
           aria-label={"edit"}
           variant="unstyled"

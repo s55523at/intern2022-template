@@ -12,6 +12,7 @@ type date = {
   year: number;
   month: number;
   day: number;
+  id: number | null;
 };
 
 type BoardProps = {
@@ -31,40 +32,25 @@ type scheduleData = {
   startTime: string | undefined;
   endTime: string | undefined;
   memo: string | undefined;
-};
-
-const nullData: scheduleData = {
-  title: "",
-  year: 0,
-  month: 0,
-  day: 0,
-  startTime: "",
-  endTime: "",
-  memo: "",
+  id: number;
 };
 
 const Board = (props: BoardProps) => {
-  const yobi = ["日", "月", "火", "水", "木", "金", "土"];
+  const yobi = [
+    "日曜日",
+    "月曜日",
+    "火曜日",
+    "水曜日",
+    "木曜日",
+    "金曜日",
+    "土曜日",
+  ];
   const dayNum: (number | null)[] = []; //空の日付配列
   const [data, setData] = useState<(scheduleData | null)[]>([]);
-  //const [data,setData]=useState<(string|null)[]>([]);
   const now = new Date();
   const nowD = now.getDate();
   const nowM = now.getMonth() + 1;
   const tKey: (number | null)[] = [];
-  // const regexp = /(\d{4})-(\d{2})-(\d{2})/;
-  // const dateVal: number[] = [];
-  // if (data[squareNum] !== undefined) {
-  //   const dateStr = props.data[props.squareNum]?.date?.match(regexp);
-  //   if (dateStr !== null) {
-  //     if (dateStr !== undefined) {
-  //       for (let i = 0; i < dateStr?.length; i++) {
-  //         dateVal[i] = parseInt(dateStr[i]);
-  //         console.log(dateVal[i]);
-  //       }
-  //     }
-  //   }
-  // }
   let zure = -1;
 
   const checkNow = () => {
@@ -78,11 +64,7 @@ const Board = (props: BoardProps) => {
   };
 
   const day1 = new Date(props.date.year, props.date.month - 1, 1);
-  //console.log(day1);
-  //month = 2;
-  //year = 2024;
   const fYobi = day1.getDay();
-  //console.log(yobi[fYobi]); //一日目の曜日
 
   let cnt = 0;
   for (; cnt !== fYobi; cnt++) {
@@ -151,22 +133,20 @@ const Board = (props: BoardProps) => {
     });
   };
   const deleteData = (delDate: date) => {
-    console.log(delDate);
+    console.log(delDate.id);
     console.log(data);
-    setData(
-      data.filter(
-        (data, index) =>
+
+    setData((prev) => {
+      return prev.filter(
+        (data) =>
           delDate.year !== data?.year ||
           delDate.month !== data?.month ||
-          delDate.day !== data?.day
-      )
-    );
+          delDate.day !== data?.day ||
+          delDate.id !== data?.id
+      );
+    });
     console.log(data);
   };
-
-  // const editData=(editData:scheduleData)=>{
-  //   setData(data.map((data,index)=>()))
-  // }
 
   const renderSquare = (i: number) => (
     <Square
@@ -179,18 +159,10 @@ const Board = (props: BoardProps) => {
       delData={deleteData}
       editData={addData}
       zure={zure}
-      //del={del}
-      // setData={setData}
     />
   );
   const ySquare = (i: number) => <Yobi value={yobi[i]} />;
 
-  /*const [count, setCount] = useState(0);
-  setCount((prevCount) => {
-    return prevCount + 1;
-  });
-
-  type SetCount = (prev: (i: number) => number) => void;*/
   const elm = [];
   for (let i = 0; i < 42; i += 7) {
     const items = [];
@@ -223,7 +195,7 @@ const Board = (props: BoardProps) => {
   return (
     <table className="tab">
       <tbody>
-        <tr>
+        <tr className="yobiText">
           <th>{ySquare(0)}</th>
           <th>{ySquare(1)}</th>
           <th>{ySquare(2)}</th>
@@ -232,62 +204,8 @@ const Board = (props: BoardProps) => {
           <th>{ySquare(5)}</th>
           <th>{ySquare(6)}</th>
         </tr>
-        {/* <tr>
-          <th>{renderSquare(0)}</th>
-          <th>{renderSquare(1)}</th>
-          <th>{renderSquare(2)}</th>
-          <th>{renderSquare(3)}</th>
-          <th>{renderSquare(4)}</th>
-          <th>{renderSquare(5)}</th>
-          <th>{renderSquare(6)}</th>
-        </tr>
-        <tr>
-          <th>{renderSquare(7)}</th>
-          <th>{renderSquare(8)}</th>
-          <th>{renderSquare(9)}</th>
-          <th>{renderSquare(10)}</th>
-          <th>{renderSquare(11)}</th>
-          <th>{renderSquare(12)}</th>
-          <th>{renderSquare(13)}</th>
-        </tr>
-        <tr>
-          <th>{renderSquare(14)}</th>
-          <th>{renderSquare(15)}</th>
-          <th>{renderSquare(16)}</th>
-          <th>{renderSquare(17)}</th>
-          <th>{renderSquare(18)}</th>
-          <th>{renderSquare(19)}</th>
-          <th>{renderSquare(20)}</th>
-        </tr>
-        <tr>
-          <th>{renderSquare(21)}</th>
-          <th>{renderSquare(22)}</th>
-          <th>{renderSquare(23)}</th>
-          <th>{renderSquare(24)}</th>
-          <th>{renderSquare(25)}</th>
-          <th>{renderSquare(26)}</th>
-          <th>{renderSquare(27)}</th>
-        </tr>
-        <tr>
-          <th>{renderSquare(28)}</th>
-          <th>{renderSquare(29)}</th>
-          <th>{renderSquare(30)}</th>
-          <th>{renderSquare(31)}</th>
-          <th>{renderSquare(32)}</th>
-          <th>{renderSquare(33)}</th>
-          <th>{renderSquare(34)}</th>
-        </tr>
-        <tr>
-          <th>{renderSquare(35)}</th>
-          <th>{renderSquare(36)}</th>
-          <th>{renderSquare(37)}</th>
-          <th>{renderSquare(38)}</th>
-          <th>{renderSquare(39)}</th>
-          <th>{renderSquare(40)}</th>
-          <th>{renderSquare(41)}</th>
-        </tr> */}
-        {elm.map((value, index) => {
-          //console.log(value);
+        {}
+        {elm.map((value) => {
           return value;
         })}
       </tbody>

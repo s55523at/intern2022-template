@@ -1,25 +1,14 @@
-import { HStack, propNames, Stack } from "@chakra-ui/react";
+import { HStack, Stack } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Box,
-  Textarea,
-  IconButton,
-} from "@chakra-ui/react";
-import { CheckIcon, DeleteIcon, CloseIcon } from "@chakra-ui/icons";
+import { Input, Box, Textarea, IconButton } from "@chakra-ui/react";
+import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
   useDisclosure,
 } from "@chakra-ui/react";
 import Schedule from "~/my-app/Schedule/Schedule";
@@ -33,11 +22,13 @@ type scheduleData = {
   startTime: string | undefined;
   endTime: string | undefined;
   memo: string | undefined;
+  id: number;
 };
 type date = {
   year: number;
   month: number;
   day: number;
+  id: number;
 };
 
 export type SquareProps = {
@@ -71,6 +62,7 @@ const Square = (props: SquareProps) => {
   const [endTime, setEnd] = useState("");
   const [memo, setMemo] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  //const [id, setId] = useState(0);
   // const dataBase: (newData | null)[] = [];
   //const [dataBase, setDataBase] = useState<newData[]>([]);
   const regexp = /(\d{4})-(\d{2})-(\d{2})/;
@@ -106,6 +98,7 @@ const Square = (props: SquareProps) => {
       startTime: startTime,
       endTime: endTime,
       memo: memo,
+      id: cntId,
     });
     setTitle("");
     setDate(defoDate);
@@ -114,24 +107,14 @@ const Square = (props: SquareProps) => {
     setMemo("");
     onClose;
   };
-  const del = () => {
+  const del = (id: number) => {
     props.delData({
       year: props.date.year,
       month: props.date.month,
       day: props.squareNum - props.zure,
+      id: id,
     });
     console.log("del");
-    /*for (let i = 0; i < props.data.length; i++) {
-      if (
-        props.date.year === props.data[i]?.year &&
-        props.date.month === props.data[i]?.month &&
-        props.value === props.data[i]?.day
-      ) {
-        console.log(props.data);
-        delete props.data[i];
-        console.log(props.data);
-      }
-    }*/
   };
 
   const found = props.data.filter(
@@ -140,6 +123,24 @@ const Square = (props: SquareProps) => {
       props.date.month === element.month &&
       props.squareNum === element.day + props.zure
   );
+  let cntId = 0;
+  const schedules = found.map((a, index) => {
+    cntId++;
+
+    return (
+      <div key={index}>
+        <Schedule
+          data={found[index]}
+          del={del}
+          value={props.squareNum - props.zure}
+          year={props.date.year}
+          month={props.date.month}
+          editData={props.editData}
+          id={index}
+        />
+      </div>
+    );
+  });
 
   if (props.value === null) {
     return <a className="square">{props.value}</a>;
@@ -149,16 +150,7 @@ const Square = (props: SquareProps) => {
         <PopoverTrigger>
           <button className={props.today ? "today" : "square"} onClick={onOpen}>
             <div className="dateContainer">{props.value}</div>
-            <Box>
-              <Schedule
-                data={found}
-                del={del}
-                value={props.value}
-                year={props.date.year}
-                month={props.date.month}
-                editData={props.editData}
-              />
-            </Box>
+            <Box className="scheduleContainer">{schedules}</Box>
           </button>
         </PopoverTrigger>
         <PopoverContent w="500px">
